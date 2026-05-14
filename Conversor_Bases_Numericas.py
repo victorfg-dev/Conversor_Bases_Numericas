@@ -1,73 +1,96 @@
-# Este programa recebe um número, a base deste e uma base para conversão desse número, compreendendo das bases 2 à 16.
-
-def variaveis():
+# Função de validação, verifica se as entradas do usuário estão no escopo do sistema. 
+def validacao():
     while True:
-         n = str(input('\nDigite um número em qualquer base: ')).strip().upper()
-         basei = int(input('\nDigite a base do número digitado: '))
-         basef = int(input('\nBase para converter: '))
-         carac = len(n.strip())
-        
-         if basei>16 or basei<2: # verificação do escopo da base inicial
-            print('\nErro: Base do número inválida.\n', '='*10)
-            continue
-            
-         if basef>16 or basef<2: # verificação do escopo da base final
-            print('\nErro: Base de conversão inválida.\n', '='*10)
-            continue
-
-         if n == "":
-            print("\nErro: número vazio.\n")
-            continue
-
-         invalido = False    
-         for d in range(0, carac):
-             if n[d] not in '0123456789ABCDEF'[:basei]:
-                print('\nErro: Base incompatível com o número.\n', '='*10)
+        invalido = False
+        n = input(str("Informe o numero para conversao: ")).strip().upper()
+        # Validação de n 
+        for c in range(len(n)):
+            if n[c] not in "0123456789ABCEF":
+                print("\nNumero invalido. Tente novamente")
                 invalido = True
                 break
-         if invalido == True:
-             continue
-         else:
-             break
-    return(n, basei, basef, carac)
+        if invalido == True:
+            continue
 
-# Cálculo para ler caracteres, atribuir valores numéricos e conversão para base 10
-n, basei, basef, carac = variaveis()
-def conversão_base10():
-    vlr = 0 # valor das letras
-    vlrnum = 0 # valor dos números
-    expo = 0 # expoente
-    global soma # resultado da conversão a base 10
+        basei = int(input("Informe a base do numero acima: "))
+        # Validação de basei 
+        if basei > 16 or basei < 2:
+            print("\nBase invalida. Tente novamente.")
+            continue
+
+        # Validação entre n e basei
+        for c in range(len(n)):
+            if n[c] not in "0123456789ABCDEF"[:basei]:
+                print("\nBase incompativel com o numero. Tente novamente.")
+                invalido = True
+                break
+        if invalido == True:
+            continue
+
+        basef = int(input("Informe a base para conversao: "))
+        # Valicao da basef
+        if basef > 16 or basef < 2:
+            print("\nBase invalida. Tente novamente.")
+            continue
+        
+        if invalido == False:
+            break
+    return(n, basei, basef)
+n, basei, basef = validacao()
+
+# Função central, esta converte o numero n para a base 10 de acordo com a variável "basei"
+def central(n, basei):
+    expoente = 0
     soma = 0
 
-    for c in range(carac-1, -1, -1):
-        if n[c] in 'ABCDEF':
-            vlr = ord(n[c]) - 55
-            soma += (vlr * (basei ** expo))
-        elif n[c] in '0123456789':
-            vlrnum = int(n[c])
-            soma += (vlrnum * (basei ** expo))
-        expo += 1
+    for i in range(len(n)-1, -1, -1):
+        if n[i] == "A":
+            soma += 10 * (basei ** expoente)
+        elif n[i] == "B":
+            soma += 11 * (basei ** expoente)
+        elif n[i] == "C":
+            soma += 12 * (basei ** expoente)
+        elif n[i] == "D":
+            soma += 13 * (basei ** expoente)
+        elif n[i] == "E":
+            soma += 14 * (basei ** expoente)
+        elif n[i] == "F":
+            soma += 15 * (basei ** expoente)
+        else:
+            soma += int(n[i]) * (basei ** expoente)
+        expoente += 1
     return(soma)
+soma = central(n, basei)
 
-# Passando da base 10 para a basef (base final)
-soma = conversão_base10()
-def conversão_basef(soma):
-    resto = 0 # resto
-    result = '' # resultado final
-
+# Função de saída final, onde o número "soma", que está na base 10, é convertido para a base "basef"
+def saida(soma, basef):
+    result = ""
+    resto = 0
+    quo = soma
     if soma == 0:
         result = "0"
-    else:
-        while soma > 0:
-            resto = (soma % basef)
-            if resto >= 10:
-                result = chr(resto + 55) + result
-            else:
-                result = str(resto) + result
-            soma = soma // basef
+    while True:
+        resto = quo % basef
+        if resto == 10:
+            result = "A" + result
+        elif resto == 11:
+            result = "B" + result
+        elif resto == 12:
+            result = "C" + result
+        elif resto == 13:
+            result = "D" + result
+        elif resto == 14:
+            result = "E" + result
+        elif resto == 15:
+            result = "F" + result
+        else:
+            result = str(resto) + result
+        
+        quo = quo // basef
+        if quo == 0:
+            break
+    
     return(result)
-
-# Saída final.
-result = conversão_basef(soma)
-print('O número {} de base {}, convertido para a base {}, é: {}.'.format(n, basei, basef, result))
+result = saida(soma, basef)
+print("O numero {} de base {} convertido para a base {} e: {}".format(n, basei, basef, result))
+        
