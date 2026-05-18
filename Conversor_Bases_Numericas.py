@@ -5,7 +5,7 @@ def validacao():
         n = input(str("Informe o numero para conversao: ")).strip().upper()
         # Validação de n 
         for c in range(len(n)):
-            if n[c] not in "0123456789ABCEF":
+            if n[c] not in "0123456789ABCDEF":
                 print("\nNumero invalido. Tente novamente")
                 invalido = True
                 break
@@ -93,4 +93,3 @@ def saida(soma, basef):
     return(result)
 result = saida(soma, basef)
 print("O numero {} de base {} convertido para a base {} e: {}".format(n, basei, basef, result))
-        
